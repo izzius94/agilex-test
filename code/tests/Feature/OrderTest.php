@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class OrderTest extends TestCase
@@ -150,7 +151,7 @@ class OrderTest extends TestCase
         Order::factory(['name' => 'Unknown 2'])->for($user)->create();
         Order::factory(['name' => 'Test 1'])->for(User::factory()->create())->create();
 
-        $response = $this->actingAs($user)->getJson('/orders?name=test&description=find%20me');
+        $response = $this->actingAs($user)->getJson('/orders?name=test&description=find%20me&date[start]=2024-01-01&date[end]='.Carbon::tomorrow()->format('Y-m-d'));
 
         $response->assertStatus(200)
             ->assertJson(['total' => 3]);

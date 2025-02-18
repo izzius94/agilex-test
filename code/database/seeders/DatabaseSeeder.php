@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
         $product3 = Product::create([
             'name' => 'Test Product 3',
             'price' => 30,
-            'created_at' => '2025-01-31 23:59:59'
+            'created_at' => '2025-01-31 23:59:59',
         ]);
 
         $order = Order::create([
@@ -53,29 +53,29 @@ class DatabaseSeeder extends Seeder
 
         $order->products()->attach([
             $product1->id => ['quantity' => 5],
-            $product2->id => ['quantity' => 10]
+            $product2->id => ['quantity' => 10],
         ]);
 
         $order = Order::create([
             'name' => 'Order 2',
             'user_id' => $user1->id,
-            'created_at' => '2025-01-31 23:59:59'
+            'created_at' => '2025-01-31 23:59:59',
         ]);
 
         $order->products()->attach([
             $product1->id => ['quantity' => 4],
-            $product3->id => ['quantity' => 3]
+            $product3->id => ['quantity' => 3],
         ]);
 
         $order = Order::create([
             'name' => 'Order 3',
             'user_id' => $user2->id,
-            'created_at' => '2025-01-31 23:59:59'
+            'created_at' => '2025-01-31 23:59:59',
         ]);
 
         $order->products()->attach([
             $product2->id => ['quantity' => 5],
-            $product3->id => ['quantity' => 5]
+            $product3->id => ['quantity' => 5],
         ]);
     }
 }

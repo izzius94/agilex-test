@@ -33,7 +33,7 @@ class OrderRepository
                 }
 
                 if (array_key_exists('end', $date)) {
-                    $query->whereDate('created_at', '<=', $date['end']);
+                    $query->orWhereDate('created_at', '<=', $date['end']);
                 }
             });
         }

@@ -11,6 +11,7 @@ install: ## Install the project
 	docker compose create
 	docker compose run --rm fpm composer install
 	docker compose run --rm fpm php artisan migrate
+	docker compose run --rm fpm php artisan db:seed
 
 start: ## Start the project
 	docker compose start

@@ -8,13 +8,11 @@ use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
-class CheckOrderQuantity implements ValidationRule, DataAwareRule
+class CheckOrderQuantity implements DataAwareRule, ValidationRule
 {
     protected array $data = [];
 
-    public function __construct(protected readonly ?int $id = null)
-    {
-    }
+    public function __construct(protected readonly ?int $id = null) {}
 
     /**
      * Set the data under validation.
@@ -31,7 +29,7 @@ class CheckOrderQuantity implements ValidationRule, DataAwareRule
     /**
      * Run the validation rule.
      *
-     * @param Closure(string, ?string=): PotentiallyTranslatedString $fail
+     * @param  Closure(string, ?string=): PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -40,7 +38,7 @@ class CheckOrderQuantity implements ValidationRule, DataAwareRule
         $productId = $this->data['products'][$field]['id'];
         $product = Product::find($productId);
 
-        if (!$product) {
+        if (! $product) {
             return;
         }
 
@@ -57,7 +55,7 @@ class CheckOrderQuantity implements ValidationRule, DataAwareRule
         $ordered = $ordered->sum('quantity');
 
         if ($value > ($product->quantity - $ordered)) {
-            $fail("We don't have enough stock for this product. Max allowed is: " . $product->quantity - $ordered);
+            $fail("We don't have enough stock for this product. Max allowed is: ".$product->quantity - $ordered);
         }
     }
 }

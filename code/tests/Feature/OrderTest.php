@@ -25,8 +25,8 @@ class OrderTest extends TestCase
         $response = $this->actingAs($user)->postJson('/orders', [
             'products' => [[
                 'id' => '1000',
-                'quantity' => '256'
-            ]]
+                'quantity' => '256',
+            ]],
         ]);
 
         $response->assertStatus(422)
@@ -43,8 +43,8 @@ class OrderTest extends TestCase
             'name' => 'My order',
             'products' => [[
                 'id' => $product->id,
-                'quantity' => 31
-            ]]
+                'quantity' => 31,
+            ]],
         ]);
 
         $response->assertStatus(422)
@@ -65,8 +65,8 @@ class OrderTest extends TestCase
             'name' => 'My order',
             'products' => [[
                 'id' => $product->id,
-                'quantity' => '7'
-            ]]
+                'quantity' => '7',
+            ]],
         ]);
 
         $response->assertStatus(422)
@@ -82,8 +82,8 @@ class OrderTest extends TestCase
             'description' => 'Order description',
             'products' => [[
                 'id' => $product->id,
-                'quantity' => '2'
-            ]]
+                'quantity' => '2',
+            ]],
         ]);
 
         $response->assertStatus(201)
@@ -107,7 +107,7 @@ class OrderTest extends TestCase
             Product::factory()->count(3),
             ['quantity' => 2]
         )->for($user)->create();
-        $response = $this->actingAs($user)->getJson('/orders/' . $order->id);
+        $response = $this->actingAs($user)->getJson('/orders/'.$order->id);
 
         $order->load('products');
         $response->assertStatus(200)
@@ -167,7 +167,7 @@ class OrderTest extends TestCase
     {
         $user = User::factory()->create();
         $order = Order::factory(['shipped' => true])->for($user)->create();
-        $response = $this->actingAs($user)->putJson('/orders/' . $order->id);
+        $response = $this->actingAs($user)->putJson('/orders/'.$order->id);
 
         $response->assertStatus(403);
     }
@@ -184,12 +184,12 @@ class OrderTest extends TestCase
 
         Order::factory()->for(User::factory()->create())->hasAttached($product, ['quantity' => 25])->create();
 
-        $response = $this->actingAs($user)->putJson('/orders/' . $order->id, [
+        $response = $this->actingAs($user)->putJson('/orders/'.$order->id, [
             'id' => $order->id,
             'products' => [[
                 'id' => $product->id,
-                'quantity' => 10
-            ]]
+                'quantity' => 10,
+            ]],
         ]);
 
         $response->assertStatus(422)
@@ -208,12 +208,12 @@ class OrderTest extends TestCase
 
         Order::factory()->for(User::factory()->create())->hasAttached($product, ['quantity' => 25])->create();
 
-        $response = $this->actingAs($user)->putJson('/orders/' . $order->id, [
+        $response = $this->actingAs($user)->putJson('/orders/'.$order->id, [
             'id' => $order->id,
             'products' => [[
                 'id' => $product->id,
-                'quantity' => 5
-            ]]
+                'quantity' => 5,
+            ]],
         ]);
 
         $response->assertStatus(200);
@@ -230,7 +230,7 @@ class OrderTest extends TestCase
     {
         $user = User::factory()->create();
         $order = Order::factory(['shipped' => true])->for($user)->create();
-        $response = $this->actingAs($user)->deleteJson('/orders/' . $order->id);
+        $response = $this->actingAs($user)->deleteJson('/orders/'.$order->id);
 
         $response->assertStatus(403);
     }
@@ -239,7 +239,7 @@ class OrderTest extends TestCase
     {
         $user = User::factory()->create();
         $order = Order::factory()->for($user)->create();
-        $response = $this->actingAs($user)->deleteJson('/orders/' . $order->id);
+        $response = $this->actingAs($user)->deleteJson('/orders/'.$order->id);
 
         $response->assertStatus(200);
     }

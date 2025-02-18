@@ -12,9 +12,9 @@ class UpdateOrder extends FormRequest
 
     public function authorize(): bool
     {
-        $this->order = Order::findOrFail($this->route('id'));
+        $this->order = Order::findOrFail((int) $this->route('id'));
 
-        if (!$this->order->shipped) {
+        if (! $this->order->shipped) {
             return true;
         }
 
@@ -28,7 +28,7 @@ class UpdateOrder extends FormRequest
             'description' => ['nullable', 'string', 'max:255'],
             'products' => ['required', 'array', 'min:1'],
             'products.*.id' => ['required', 'integer', 'min:1', 'exists:products,id'],
-            'products.*.quantity' => ['required', 'integer', 'min:1', 'max:255', new CheckOrderQuantity($this->route('id', $this->order))],
+            'products.*.quantity' => ['required', 'integer', 'min:1', 'max:255', new CheckOrderQuantity((int) $this->route('id', $this->order))],
         ];
     }
 

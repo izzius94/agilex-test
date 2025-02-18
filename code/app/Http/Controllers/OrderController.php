@@ -15,6 +15,7 @@ class OrderController extends Controller
     {
         return $repository->filter($request);
     }
+
     public function store(PlaceOrder $request)
     {
         $orderData = $request->only(['name', 'description']);

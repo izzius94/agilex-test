@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Product;
 use App\Rules\CheckOrderQuantity;
-use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PlaceOrder extends FormRequest

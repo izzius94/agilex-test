@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class OrderTest extends TestCase
@@ -242,5 +243,44 @@ class OrderTest extends TestCase
         $response = $this->actingAs($user)->deleteJson('/orders/'.$order->id);
 
         $response->assertStatus(200);
+    }
+
+    public function test_cannot_ship_an_order_that_does_not_exist(): void
+    {
+        $this->artisan('app:ship-order 1')
+            ->expectsOutput('Order does not exist.')
+            ->assertExitCode(1);
+    }
+
+    public function test_cannot_ship_an_order_already_shipped(): void
+    {
+        $order = Order::factory(['shipped' => true])->for(User::factory()->create())->create();
+
+        $this->artisan('app:ship-order ' . $order->id)
+            ->expectsOutput('Order already shipped.')
+            ->assertExitCode(0);
+    }
+
+    public function test_can_ship_an_order(): void
+    {
+        $product = Product::factory(['quantity' => 30])->create();
+
+        $order = Order::factory()->hasAttached(
+            $product,
+            ['quantity' => 5]
+        )->for(User::factory()->create())->create();
+
+        $this->artisan('app:ship-order ' . $order->id)
+            ->expectsOutput('Order shipped.')
+            ->assertExitCode(0);
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'quantity' => '25',
+        ]);
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
+            'shipped' => true,
+        ]);
     }
 }

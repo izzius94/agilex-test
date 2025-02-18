@@ -24,6 +24,20 @@ class OrderRepository
             });
         }
 
+        if ($request->has('date') && is_array($request->get('date'))) {
+            $query->where(function ($query) use ($request) {
+                $date = $request->get('date');
+
+                if (array_key_exists('start', $date)) {
+                    $query->whereDate('created_at', '>=', $date['start']);
+                }
+
+                if (array_key_exists('end', $date)) {
+                    $query->whereDate('created_at', '<=', $date['end']);
+                }
+            });
+        }
+
         return $query->paginate();
     }
 }

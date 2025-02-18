@@ -6,10 +6,16 @@ use App\Models\Order;
 use App\Rules\CheckOrderQuantity;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Request to update an order
+ */
 class UpdateOrder extends FormRequest
 {
     protected Order $order;
 
+    /**
+     * Determine if the use can update the order by checking if the order is shipped or not
+     */
     public function authorize(): bool
     {
         $this->order = Order::findOrFail((int) $this->route('id'));

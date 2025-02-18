@@ -10,11 +10,6 @@ use Illuminate\Validation\ValidationException;
 
 class Login extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -24,6 +19,8 @@ class Login extends FormRequest
     }
 
     /**
+     * Authenticate the user if the given credentials are right
+     *
      * @throws ValidationException
      */
     public function authenticate(): void

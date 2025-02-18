@@ -6,7 +6,6 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class OrderTest extends TestCase
@@ -256,7 +255,7 @@ class OrderTest extends TestCase
     {
         $order = Order::factory(['shipped' => true])->for(User::factory()->create())->create();
 
-        $this->artisan('app:ship-order ' . $order->id)
+        $this->artisan('app:ship-order '.$order->id)
             ->expectsOutput('Order already shipped.')
             ->assertExitCode(0);
     }
@@ -270,7 +269,7 @@ class OrderTest extends TestCase
             ['quantity' => 5]
         )->for(User::factory()->create())->create();
 
-        $this->artisan('app:ship-order ' . $order->id)
+        $this->artisan('app:ship-order '.$order->id)
             ->expectsOutput('Order shipped.')
             ->assertExitCode(0);
 

@@ -32,13 +32,15 @@ class ShipOrder extends Command implements PromptsForMissingInput
 
         $order = Order::find($id);
 
-        if (!$order) {
+        if (! $order) {
             $this->error('Order does not exist.');
+
             return 1;
         }
 
         if ($order->shipped) {
             $this->warn('Order already shipped.');
+
             return 0;
         }
 

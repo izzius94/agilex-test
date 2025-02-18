@@ -8,6 +8,10 @@ use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
+/**
+ * Rule to check if the quantity of a given product in an order can be updated by checking how many items are left in
+ * the stock, by checking all the orders with that product not shipped
+ */
 class CheckOrderQuantity implements DataAwareRule, ValidationRule
 {
     protected array $data = [];

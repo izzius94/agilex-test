@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateOrder;
 use App\Models\Order;
 use App\Repositories\OrderRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -16,7 +17,7 @@ class OrderController extends Controller
         return $repository->filter($request);
     }
 
-    public function store(PlaceOrder $request)
+    public function store(PlaceOrder $request): Order
     {
         $orderData = $request->only(['name', 'description']);
         $orderData['user_id'] = auth()->id();
@@ -30,14 +31,14 @@ class OrderController extends Controller
         return $order;
     }
 
-    public function get(int $id)
+    public function get(int $id): Order
     {
         return Order::where('user_id', auth()->id())
             ->with('products')
             ->findOrFail($id);
     }
 
-    public function update(int $id, UpdateOrder $request)
+    public function update(UpdateOrder $request): JsonResponse
     {
         $order = $request->getOrder();
         $products = $request->input('products');
@@ -49,10 +50,10 @@ class OrderController extends Controller
 
         $order->products()->sync($data);
 
-        return ['message' => 'Order updated.'];
+        return response()->json(['message' => 'Order updated.']);
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $order = Order::where('user_id', auth()->id())->findOrFail($id);
 
@@ -62,6 +63,6 @@ class OrderController extends Controller
 
         $order->delete();
 
-        return ['message' => 'Order deleted.'];
+        return response()->json(['message' => 'Order deleted.']);
     }
 }

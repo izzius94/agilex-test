@@ -12,6 +12,9 @@ install: ## Install the project
 	docker compose run --rm fpm composer install
 	docker compose run --rm fpm php artisan migrate
 
+start: ## Start the project
+	docker compose start
+
 phpstan: ## Run phpstan
 	docker compose run --rm fpm  ./vendor/bin/phpstan analyse --memory-limit=2G
 
@@ -20,3 +23,7 @@ pint: ## Run laravel pint
 
 test: ## Run tests
 	docker compose run --rm -e DB_USERNAME=root fpm php artisan test --parallel --processes=4
+
+.PHONY: coverage
+coverage: ## Run coverage
+	docker compose run --rm -e XDEBUG_MODE=coverage fpm ./vendor/bin/phpunit --configuration ./phpunit.xml --coverage-html ./coverage

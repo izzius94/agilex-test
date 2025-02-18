@@ -15,7 +15,6 @@ jobs:
         env:
           MYSQL_DATABASE: test
           MYSQL_ROOT_PASSWORD: password
-          DB_HOST: 127.0.0.1
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -40,4 +39,6 @@ jobs:
       - name: Run PHPStan
         run: ./vendor/bin/phpstan analyse --memory-limit=2G
       - name: Run tests
+        env:
+          DB_HOST: 127.0.0.1
         run: php artisan test --parallel --processes=4

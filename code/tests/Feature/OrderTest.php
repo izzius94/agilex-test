@@ -113,4 +113,60 @@ class OrderTest extends TestCase
         $response->assertStatus(200)
             ->assertExactJson($order->toArray());
     }
+
+    public function test_cannot_retrieve_a_orders_if_not_logged(): void
+    {
+        $response = $this->getJson('/orders');
+
+        $response->assertStatus(401);
+    }
+
+    public function test_can_retrieve_a_orders_if_logged(): void
+    {
+        $user = User::factory()->create();
+
+        Order::factory()->hasAttached(
+            Product::factory()->count(3)
+        );
+        Order::factory()->hasAttached(
+            Product::factory()->count(3),
+            ['quantity' => 2]
+        )->for($user)->count(3)->create();
+
+        $response = $this->actingAs($user)->getJson('/orders');
+
+        $response->assertStatus(200)
+            ->assertJson(['total' => 3]);
+    }
+
+    public function test_can_retrieve_a_orders_filtered_if_logged(): void
+    {
+        $user = User::factory()->create();
+
+        Order::factory(['name' => 'Test 1'])->hasAttached(
+            Product::factory()->count(3)
+        )->for($user)->create();
+
+        Order::factory(['name' => 'Test 2', 'description' => 'find me'])->hasAttached(
+            Product::factory()->count(3)
+        )->for($user)->create();
+        Order::factory(['name' => 'Unknown 1', 'description' => 'find me'])->hasAttached(
+            Product::factory()->count(3)
+        )->for($user)->create();
+
+        Order::factory(['name' => 'Unknown 2'])->hasAttached(
+            Product::factory()->count(3)
+        )->for($user)->create();
+
+        Order::factory(['name' => 'Test 1'])->hasAttached(
+            Product::factory()->count(3)
+        )->create();
+
+        $response = $this->actingAs($user)->getJson('/orders', [
+            'name' => 'Test',
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson(['total' => 3]);
+    }
 }

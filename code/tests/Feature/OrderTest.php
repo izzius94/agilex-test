@@ -92,4 +92,25 @@ class OrderTest extends TestCase
                 'description' => 'Order description',
             ]);
     }
+
+    public function test_cannot_retrieve_an_order_if_not_logged(): void
+    {
+        $response = $this->getJson('/orders/1');
+
+        $response->assertStatus(401);
+    }
+
+    public function test_can_retrieve_an_order(): void
+    {
+        $user = User::factory()->create();
+        $order = Order::factory()->hasAttached(
+            Product::factory()->count(3),
+            ['quantity' => 2]
+        )->for($user)->create();
+        $response = $this->actingAs($user)->getJson('/orders/' . $order->id);
+
+        $order->load('products');
+        $response->assertStatus(200)
+            ->assertExactJson($order->toArray());
+    }
 }

@@ -19,4 +19,4 @@ pint: ## Run laravel pint
 	docker compose run --rm fpm  ./vendor/bin/pint -v
 
 test: ## Run tests
-	docker compose run --rm -e DB_USERNAME=root fpm php artisan test
+	docker compose run --rm -e DB_USERNAME=root fpm php artisan test  --parallel --processes=4

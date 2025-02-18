@@ -19,6 +19,8 @@ class OrderFactory extends Factory
         return [
             'name' => fake()->name(),
             'description' => fake()->text(),
+            'shipped' => 0,
+            'deleted_at' => null,
         ];
     }
 }

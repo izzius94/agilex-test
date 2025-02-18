@@ -20,4 +20,11 @@ class OrderController extends Controller
 
         return $order;
     }
+
+    public function get(int $id)
+    {
+        return Order::where('user_id', auth()->id())
+            ->with('products')
+            ->findOrFail($id);
+    }
 }

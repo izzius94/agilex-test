@@ -1,6 +1,6 @@
 services:
   fpm:
-    image: agilex-fpm/fpm:0.1.1
+    image: agilex-fpm/fpm:0.1.2
     build:
       context: .
       dockerfile: ./docker/fpm/Dockerfile

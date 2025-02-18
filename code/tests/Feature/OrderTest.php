@@ -144,31 +144,13 @@ class OrderTest extends TestCase
     {
         $user = User::factory()->create();
 
-        Order::factory(['name' => 'Test 1'])->hasAttached(
-            Product::factory()->count(3),
-            ['quantity' => 2]
-        )->for($user)->create();
+        Order::factory(['name' => 'Test 1'])->for($user)->create();
+        Order::factory(['name' => 'Test 2', 'description' => 'find me'])->for($user)->create();
+        Order::factory(['name' => 'Unknown 1', 'description' => 'find me'])->for($user)->create();
+        Order::factory(['name' => 'Unknown 2'])->for($user)->create();
+        Order::factory(['name' => 'Test 1'])->for(User::factory()->create())->create();
 
-        Order::factory(['name' => 'Test 2', 'description' => 'find me'])->hasAttached(
-            Product::factory()->count(3),
-            ['quantity' => 2]
-        )->for($user)->create();
-        Order::factory(['name' => 'Unknown 1', 'description' => 'find me'])->hasAttached(
-            Product::factory()->count(3),
-            ['quantity' => 2]
-        )->for($user)->create();
-
-        Order::factory(['name' => 'Unknown 2'])->hasAttached(
-            Product::factory()->count(3),
-            ['quantity' => 2]
-        )->for($user)->create();
-
-        Order::factory(['name' => 'Test 1'])->hasAttached(
-            Product::factory()->count(3),
-            ['quantity' => 2]
-        )->for(User::factory()->create())->create();
-
-        $response = $this->actingAs($user)->getJson('/orders?name=test&description=descrip');
+        $response = $this->actingAs($user)->getJson('/orders?name=test&description=find%20me');
 
         $response->assertStatus(200)
             ->assertJson(['total' => 3]);

@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PlaceOrder;
 use App\Models\Order;
+use App\Repositories\OrderRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    public function index(OrderRepository $repository, Request $request): LengthAwarePaginator
+    {
+        return $repository->filter($request);
+    }
     public function store(PlaceOrder $request)
     {
         $orderData = $request->only(['name', 'description']);

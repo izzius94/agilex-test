@@ -50,15 +50,6 @@ To see the insight click [here](http://127.0.0.1:8000/__clockwork)
 
 **You may change the port according to you configuration**
 
-[Link](https://underground.works/clockwork/#documentation)
-### MailDev
-MailDev is a simple way to test your project's generated email during development, with an easy to use web interface that
-runs on your machine built on top of Node.js.
-
-It is accessible [here](http://127.0.0.1:8025)
-
-**You may change the port according to you configuration**
-
 [Link](https://github.com/maildev/maildev)
 ### PHPUnit
 PHPUnit is a programmer-oriented testing framework for PHP. It is an instance of the xUnit architecture for unit testing
@@ -92,4 +83,4 @@ stays clean and consistent.
 make coverage
 ```
 Code coverage is the way to see how mush of your code is covered by the tests exporting it in a folder called `coverage`
-with HTML files to investigate the results.
+with HTML files to investigate the results. Files available at `code/coverage`.

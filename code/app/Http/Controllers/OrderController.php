@@ -50,4 +50,17 @@ class OrderController extends Controller
 
         return ['message' => 'Order updated.'];
     }
+
+    public function destroy(int $id)
+    {
+        $order = Order::where('user_id', auth()->id())->findOrFail($id);
+
+        if ($order->shipped) {
+            return response()->json(['message' => 'Order already shipped.'], 403);
+        }
+
+        $order->delete();
+
+        return ['message' => 'Order deleted.'];
+    }
 }

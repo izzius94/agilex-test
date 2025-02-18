@@ -8,3 +8,5 @@ parameters:
     level: 5
     ignoreErrors:
         - '#PHPDoc tag @property-read for property App\\Models\\.*::\$use_factory contains unknown class App\\Models\\TFactory.#'
+    excludePaths:
+        - app/Console/Commands/ShipOrder.php

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PlaceOrder;
+use App\Http\Requests\UpdateOrder;
 use App\Models\Order;
 use App\Repositories\OrderRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -33,5 +34,22 @@ class OrderController extends Controller
         return Order::where('user_id', auth()->id())
             ->with('products')
             ->findOrFail($id);
+    }
+
+    public function update(int $id, UpdateOrder $request)
+    {
+        $products = $request->input('products');
+        $data = [];
+        $order = Order::where('user_id', auth()->id())
+            ->with('products')
+            ->findOrFail($id);
+
+        foreach ($products as $product) {
+            $data[$product['id']] = ['quantity' => $product['quantity']];
+        }
+
+        $order->products()->sync($data);
+
+        return $order;
     }
 }

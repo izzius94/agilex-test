@@ -155,4 +155,72 @@ class OrderTest extends TestCase
         $response->assertStatus(200)
             ->assertJson(['total' => 3]);
     }
+
+    public function test_cannot_update_an_order_if_not_logged(): void
+    {
+        $response = $this->putJson('/orders/1');
+
+        $response->assertStatus(401);
+    }
+
+    public function test_cannot_update_an_order_if(): void
+    {
+        $user = User::factory()->create();
+        $order = Order::factory()->hasAttached(
+            Product::factory()->count(3),
+            ['quantity' => 2]
+        )->for($user)->create();
+        $response = $this->actingAs($user)->getJson('/orders/' . $order->id);
+
+        $order->load('products');
+        $response->assertStatus(200)
+            ->assertExactJson($order->toArray());
+    }
+
+    public function test_cannot_update_an_order_if_the_product_quantity_is_not_enough_with_other_orders(): void
+    {
+        $product = Product::factory(['quantity' => 30])->create();
+
+        $user = User::factory()->create();
+        $order = Order::factory()->hasAttached(
+            $product,
+            ['quantity' => 5]
+        )->for($user)->create();
+
+        Order::factory()->for(User::factory()->create())->hasAttached($product, ['quantity' => 25])->create();
+
+        $response = $this->actingAs($user)->putJson('/orders/' . $order->id, [
+            'id' => $order->id,
+            'products' => [[
+                'id' => $product->id,
+                'quantity' => 10
+            ]]
+        ]);
+
+        $response->assertStatus(422)
+            ->assertInvalid(['products.0.quantity']);
+    }
+
+    public function test_can_update_an_order(): void
+    {
+        $product = Product::factory(['quantity' => 30])->create();
+
+        $user = User::factory()->create();
+        $order = Order::factory()->hasAttached(
+            $product,
+            ['quantity' => 5]
+        )->for($user)->create();
+
+        Order::factory()->for(User::factory()->create())->hasAttached($product, ['quantity' => 25])->create();
+
+        $response = $this->actingAs($user)->putJson('/orders/' . $order->id, [
+            'id' => $order->id,
+            'products' => [[
+                'id' => $product->id,
+                'quantity' => 5
+            ]]
+        ]);
+
+        $response->assertStatus(200);
+    }
 }

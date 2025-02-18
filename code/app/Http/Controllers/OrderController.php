@@ -38,11 +38,9 @@ class OrderController extends Controller
 
     public function update(int $id, UpdateOrder $request)
     {
+        $order = $request->getOrder();
         $products = $request->input('products');
         $data = [];
-        $order = Order::where('user_id', auth()->id())
-            ->with('products')
-            ->findOrFail($id);
 
         foreach ($products as $product) {
             $data[$product['id']] = ['quantity' => $product['quantity']];
@@ -50,6 +48,6 @@ class OrderController extends Controller
 
         $order->products()->sync($data);
 
-        return $order;
+        return ['message' => 'Order updated.'];
     }
 }

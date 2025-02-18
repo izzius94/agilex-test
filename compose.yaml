@@ -1,0 +1,16 @@
+services:
+  fpm:
+    extends:
+      file: compose.services.yaml
+      service: fpm
+    depends_on:
+      - mysql
+    build:
+      target: dev
+    command: "php artisan serve --host 0.0.0.0"
+    ports:
+      - "${FPM_PORT:-8000}:8000"
+  mysql:
+    extends:
+      file: compose.services.yaml
+      service: mysql

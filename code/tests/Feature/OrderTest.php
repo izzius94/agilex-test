@@ -114,19 +114,20 @@ class OrderTest extends TestCase
             ->assertExactJson($order->toArray());
     }
 
-    public function test_cannot_retrieve_a_orders_if_not_logged(): void
+    public function test_cannot_retrieve_orders_if_not_logged(): void
     {
         $response = $this->getJson('/orders');
 
         $response->assertStatus(401);
     }
 
-    public function test_can_retrieve_a_orders_if_logged(): void
+    public function test_can_retrieve_orders_if_logged(): void
     {
         $user = User::factory()->create();
 
         Order::factory()->hasAttached(
-            Product::factory()->count(3)
+            Product::factory()->count(3),
+            ['quantity' => 2]
         );
         Order::factory()->hasAttached(
             Product::factory()->count(3),
@@ -139,32 +140,35 @@ class OrderTest extends TestCase
             ->assertJson(['total' => 3]);
     }
 
-    public function test_can_retrieve_a_orders_filtered_if_logged(): void
+    public function test_can_retrieve_orders_filtered_if_logged(): void
     {
         $user = User::factory()->create();
 
         Order::factory(['name' => 'Test 1'])->hasAttached(
-            Product::factory()->count(3)
+            Product::factory()->count(3),
+            ['quantity' => 2]
         )->for($user)->create();
 
         Order::factory(['name' => 'Test 2', 'description' => 'find me'])->hasAttached(
-            Product::factory()->count(3)
+            Product::factory()->count(3),
+            ['quantity' => 2]
         )->for($user)->create();
         Order::factory(['name' => 'Unknown 1', 'description' => 'find me'])->hasAttached(
-            Product::factory()->count(3)
+            Product::factory()->count(3),
+            ['quantity' => 2]
         )->for($user)->create();
 
         Order::factory(['name' => 'Unknown 2'])->hasAttached(
-            Product::factory()->count(3)
+            Product::factory()->count(3),
+            ['quantity' => 2]
         )->for($user)->create();
 
         Order::factory(['name' => 'Test 1'])->hasAttached(
-            Product::factory()->count(3)
-        )->create();
+            Product::factory()->count(3),
+            ['quantity' => 2]
+        )->for(User::factory()->create())->create();
 
-        $response = $this->actingAs($user)->getJson('/orders', [
-            'name' => 'Test',
-        ]);
+        $response = $this->actingAs($user)->getJson('/orders?name=test&description=descrip');
 
         $response->assertStatus(200)
             ->assertJson(['total' => 3]);

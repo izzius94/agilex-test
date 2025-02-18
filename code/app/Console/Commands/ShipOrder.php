@@ -52,7 +52,7 @@ class ShipOrder extends Command implements PromptsForMissingInput
             $product->save();
         });
 
-        $order->shipped = true;
+        $order->shipped = 1;
 
         $order->save();
         $this->info('Order shipped.');

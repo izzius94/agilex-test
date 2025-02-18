@@ -137,8 +137,8 @@ class OrderTest extends TestCase
 
         $response = $this->actingAs($user)->getJson('/orders');
 
-        $response->assertStatus(200)
-            ->assertJson(['total' => 3]);
+        $response->assertStatus(200);
+        $this->assertCount(3, $response->json('data'));
     }
 
     public function test_can_retrieve_orders_filtered_if_logged(): void
@@ -151,10 +151,10 @@ class OrderTest extends TestCase
         Order::factory(['name' => 'Unknown 2'])->for($user)->create();
         Order::factory(['name' => 'Test 1'])->for(User::factory()->create())->create();
 
-        $response = $this->actingAs($user)->getJson('/orders?name=test&description=find%20me&date[start]=2024-01-01&date[end]='.Carbon::tomorrow()->format('Y-m-d'));
+        $response = $this->actingAs($user)->getJson('/orders?name=test&description=find%20me&date_start=2024-01-01&date_end='.Carbon::tomorrow()->format('Y-m-d'));
 
-        $response->assertStatus(200)
-            ->assertJson(['total' => 3]);
+        $response->assertStatus(200);
+        $this->assertCount(3, $response->json('data'));
     }
 
     public function test_cannot_update_an_order_if_not_logged(): void

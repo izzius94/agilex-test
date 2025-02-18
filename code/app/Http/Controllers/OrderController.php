@@ -6,13 +6,13 @@ use App\Http\Requests\PlaceOrder;
 use App\Http\Requests\UpdateOrder;
 use App\Models\Order;
 use App\Repositories\OrderRepository;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index(OrderRepository $repository, Request $request): LengthAwarePaginator
+    public function index(OrderRepository $repository, Request $request): Paginator
     {
         return $repository->filter($request);
     }

@@ -3,12 +3,12 @@
 namespace App\Repositories;
 
 use App\Models\Order;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\Request;
 
 class OrderRepository
 {
-    public function filter(Request $request): LengthAwarePaginator
+    public function filter(Request $request): Paginator
     {
         $query = Order::where('user_id', $request->user()->id);
 
@@ -24,20 +24,18 @@ class OrderRepository
             });
         }
 
-        if ($request->has('date') && is_array($request->get('date'))) {
+        if ($request->has('date_start') || $request->has('date_end')) {
             $query->where(function ($query) use ($request) {
-                $date = $request->get('date');
-
-                if (array_key_exists('start', $date)) {
-                    $query->whereDate('created_at', '>=', $date['start']);
+                if ($request->has('date_start')) {
+                    $query->whereDate('created_at', '>=', $request->get('date_start'));
                 }
 
-                if (array_key_exists('end', $date)) {
-                    $query->orWhereDate('created_at', '<=', $date['end']);
+                if ($request->has('date_end')) {
+                    $query->orWhereDate('created_at', '<=', $request->get('date_end'));
                 }
             });
         }
 
-        return $query->paginate();
+        return $query->simplePaginate();
     }
 }

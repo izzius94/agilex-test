@@ -218,4 +218,29 @@ class OrderTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_cannot_delete_an_order_if_not_logged(): void
+    {
+        $response = $this->deleteJson('/orders/1');
+
+        $response->assertStatus(401);
+    }
+
+    public function test_cannot_delete_an_order_if_already_shipped(): void
+    {
+        $user = User::factory()->create();
+        $order = Order::factory(['shipped' => true])->for($user)->create();
+        $response = $this->actingAs($user)->deleteJson('/orders/' . $order->id);
+
+        $response->assertStatus(403);
+    }
+
+    public function test_can_delete_an_order(): void
+    {
+        $user = User::factory()->create();
+        $order = Order::factory()->for($user)->create();
+        $response = $this->actingAs($user)->deleteJson('/orders/' . $order->id);
+
+        $response->assertStatus(200);
+    }
 }

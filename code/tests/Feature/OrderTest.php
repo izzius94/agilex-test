@@ -163,18 +163,13 @@ class OrderTest extends TestCase
         $response->assertStatus(401);
     }
 
-    public function test_cannot_update_an_order_if(): void
+    public function test_cannot_retrieve_an_order_if_already_shipped(): void
     {
         $user = User::factory()->create();
-        $order = Order::factory()->hasAttached(
-            Product::factory()->count(3),
-            ['quantity' => 2]
-        )->for($user)->create();
-        $response = $this->actingAs($user)->getJson('/orders/' . $order->id);
+        $order = Order::factory(['shipped' => true])->for($user)->create();
+        $response = $this->actingAs($user)->putJson('/orders/' . $order->id);
 
-        $order->load('products');
-        $response->assertStatus(200)
-            ->assertExactJson($order->toArray());
+        $response->assertStatus(403);
     }
 
     public function test_cannot_update_an_order_if_the_product_quantity_is_not_enough_with_other_orders(): void

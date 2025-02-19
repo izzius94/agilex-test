@@ -6,8 +6,8 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 install: ## Install the project
-	cp -n .env.example .env || true
-	cp -n code/.env.example code/.env || true
+	cp --update=none .env.example .env || true
+	cp --update=none code/.env.example code/.env || true
 	docker compose create
 	docker compose run --rm fpm composer install
 	docker compose run --rm fpm php artisan migrate

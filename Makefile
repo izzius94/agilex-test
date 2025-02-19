@@ -25,6 +25,8 @@ pint: ## Run laravel pint
 test: ## Run tests
 	docker compose run --rm -e DB_USERNAME=root fpm php artisan test --parallel --processes=4
 
-.PHONY: coverage
 coverage: ## Run coverage
 	docker compose run --rm -e XDEBUG_MODE=coverage fpm ./vendor/bin/phpunit --configuration ./phpunit.xml --coverage-html ./coverage
+
+sonar: ## Run sonar scanner
+	docker compose run --rm sonar

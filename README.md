@@ -5,11 +5,11 @@ This is a skeleton for Laravel project with Docker.
 
 ## Getting Started
 ### Dependencies
-- Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- Download and install [Docker](http://docs.docker.com/get-started/get-docker/)
 - Install [Make](https://www.gnu.org/software/make/), command for Mac: `brew install make`,
 
 ### Installing and executing
-There are 2 command to help you install, start and update the project
+There are 2 command to help you install and start.
 
 #### Installation
 ```bash
@@ -81,6 +81,13 @@ stays clean and consistent.
 #### Code Coverage
 ```bash
 make coverage
+```
+Code coverage is the way to see how mush of your code is covered by the tests exporting it in a folder called `coverage`
+with HTML files to investigate the results. Files available at `code/coverage`.
+
+#### Code Coverage
+```bash
+make sonar
 ```
 Code coverage is the way to see how mush of your code is covered by the tests exporting it in a folder called `coverage`
 with HTML files to investigate the results. Files available at `code/coverage`.

@@ -16,3 +16,7 @@ services:
       service: mysql
     volumes:
       - ./docker/mysql/setup.sql:/docker-entrypoint-initdb.d/01.sql
+  sonar:
+    extends:
+      service: sonar
+      file: compose.services.yaml

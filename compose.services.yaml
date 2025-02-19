@@ -23,3 +23,12 @@ services:
       test: [ "CMD", "mysqladmin", "ping", "-ppassword" ]
       retries: 3
       timeout: 5s
+  sonar:
+    image: sonarsource/sonar-scanner-cli
+    environment:
+      SONAR_HOST_URL: "${SONAR_HOST:-http://172.17.0.1:8080}"
+      SONAR_SCANNER_OPTS: "-Dsonar.projectKey=${SONAR_PROJECT_KEY}"
+      SONAR_TOKEN: "${SONAR_TOKEN}"
+    volumes:
+      - ./code:/usr/src
+    profiles: [ "cli" ]

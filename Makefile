@@ -10,6 +10,7 @@ install: ## Install the project
 	cp --update=none code/.env.example code/.env || true
 	docker compose create
 	docker compose run --rm fpm composer install
+	docker compose run --rm fpm php artisan key:generate
 	docker compose run --rm fpm php artisan migrate
 	docker compose run --rm fpm php artisan db:seed
 

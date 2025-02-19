@@ -90,4 +90,5 @@ with HTML files to investigate the results. Files available at `code/coverage`.
 make sonar
 ```
 Analyze the project with sonar scanner and send it to sonarqube server.
-[link](https://www.sonarsource.com/products/sonarqube/)
+
+[Link](https://www.sonarsource.com/products/sonarqube/)

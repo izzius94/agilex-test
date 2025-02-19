@@ -29,4 +29,5 @@ coverage: ## Run coverage
 	docker compose run --rm -e XDEBUG_MODE=coverage fpm ./vendor/bin/phpunit --configuration ./phpunit.xml --coverage-html ./coverage
 
 sonar: ## Run sonar scanner
+	docker compose run --rm -e XDEBUG_MODE=coverage fpm ./vendor/bin/phpunit --configuration ./phpunit.xml --coverage-clover=./coverage/coverage-result.xml --log-junit=./coverage/execution-result.xml
 	docker compose run --rm sonar

@@ -6,10 +6,11 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 install: ## Install the project
-	cp -n .env.example .env || true
-	cp -n code/.env.example code/.env || true
+	cp --update=none .env.example .env || true
+	cp --update=none code/.env.example code/.env || true
 	docker compose create
 	docker compose run --rm fpm composer install
+	docker compose run --rm fpm php artisan key:generate
 	docker compose run --rm fpm php artisan migrate
 	docker compose run --rm fpm php artisan db:seed
 
@@ -25,6 +26,9 @@ pint: ## Run laravel pint
 test: ## Run tests
 	docker compose run --rm -e DB_USERNAME=root fpm php artisan test --parallel --processes=4
 
-.PHONY: coverage
 coverage: ## Run coverage
 	docker compose run --rm -e XDEBUG_MODE=coverage fpm ./vendor/bin/phpunit --configuration ./phpunit.xml --coverage-html ./coverage
+
+sonar: ## Run sonar scanner
+	docker compose run --rm -e XDEBUG_MODE=coverage fpm ./vendor/bin/phpunit --configuration ./phpunit.xml --coverage-clover=./coverage/coverage-result.xml --log-junit=./coverage/execution-result.xml
+	docker compose run --rm sonar

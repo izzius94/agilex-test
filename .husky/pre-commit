@@ -1,0 +1,3 @@
+echo "Eseguo i test Laravel..."
+docker compose run -T --rm app php artisan test --no-ansi --quiet
+
